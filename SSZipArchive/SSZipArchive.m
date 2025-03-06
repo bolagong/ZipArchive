@@ -1214,15 +1214,24 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
         //   is expected to not include a byte order mark (BOM).
         
         //  Code Page 437 corresponds to kCFStringEncodingDOSLatinUS
-        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
-        NSString* strPath = [NSString stringWithCString:filename encoding:encoding];
+        //NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
+        //NSString* strPath = [NSString stringWithCString:filename encoding:encoding];
+	// 因为解压缩汉语变成乱码，使用 UTF8 编码
+        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+        NSString *strPath = [NSString stringWithCString:filename encoding:encoding];
+ 
         if (strPath) {
             return strPath;
         }
     }
     
     // attempting unicode encoding
-    NSString * strPath = @(filename);
+    //NSString * strPath = @(filename);
+
+    // 因为解压缩汉语变成乱码，使用 UTF8 编码
+    NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSString *strPath = [NSString stringWithCString:filename encoding:enc];
+    
     if (strPath) {
         return strPath;
     }
